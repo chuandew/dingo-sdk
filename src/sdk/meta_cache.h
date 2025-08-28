@@ -100,7 +100,8 @@ class MetaCache {
   Status ProcessQueryRegionsByRegionIdResponse(const pb::coordinator::QueryRegionResponse& response,
                                                std::shared_ptr<Region>& region);
 
-  Status ProcessScanRegionsBetweenRangeResponse(const pb::coordinator::ScanRegionsResponse& response,
+  Status ProcessScanRegionsBetweenRangeResponse(const pb::coordinator::ScanRegionsRequest& request,
+                                                const pb::coordinator::ScanRegionsResponse& response,
                                                 std::vector<std::shared_ptr<Region>>& regions);
 
   static void ProcessScanRegionInfo(const pb::coordinator::ScanRegionInfo& scan_region_info,

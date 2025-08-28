@@ -164,7 +164,7 @@ Status MetaCache::ScanRegionsBetweenRange(std::string_view start_key, std::strin
 
   DINGO_RETURN_NOT_OK(coordinator_rpc_controller_->SyncCall(rpc));
 
-  return ProcessScanRegionsBetweenRangeResponse(*rpc.Response(), regions);
+  return ProcessScanRegionsBetweenRangeResponse(*rpc.Request(), *rpc.Response(), regions);
 }
 
 Status MetaCache::ScanRegionsBetweenContinuousRange(std::string_view start_key, std::string_view end_key,
@@ -230,7 +230,7 @@ Status MetaCache::ScanRegionsBetweenContinuousRange(std::string_view start_key, 
 
   DINGO_RETURN_NOT_OK(coordinator_rpc_controller_->SyncCall(rpc));
 
-  return ProcessScanRegionsBetweenRangeResponse(*rpc.Response(), regions);
+  return ProcessScanRegionsBetweenRangeResponse(*rpc.Request(), *rpc.Response(), regions);
 }
 
 void MetaCache::ClearRange(const std::shared_ptr<Region>& region) {
@@ -401,8 +401,11 @@ Status MetaCache::ProcessScanRegionsByKeyResponse(const pb::coordinator::ScanReg
   }
 }
 
-Status MetaCache::ProcessScanRegionsBetweenRangeResponse(const pb::coordinator::ScanRegionsResponse& response,
+Status MetaCache::ProcessScanRegionsBetweenRangeResponse(const pb::coordinator::ScanRegionsRequest& request,
+                                                         const pb::coordinator::ScanRegionsResponse& response,
                                                          std::vector<std::shared_ptr<Region>>& regions) {
+  DINGO_LOG(WARNING) << "ProcessScanRegionsBetweenRangeResponse request:" << request.ShortDebugString()
+                     << ", response:" << response.ShortDebugString();
   if (response.regions_size() > 0) {
     std::vector<std::shared_ptr<Region>> tmp_regions;
 
